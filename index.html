@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>chatapp tutorial</title>
     <style>
       body {
         margin: 0;
@@ -11,7 +11,7 @@
       }
 
       #form {
-        background: rgba(0, 0, 0, 0.15);
+        background: #181818dc;
         padding: 0.25rem;
         position: fixed;
         bottom: 0;
@@ -26,18 +26,17 @@
         border: none;
         padding: 0 1rem;
         flex-grow: 1;
-        border-radius: 2rem;
         margin: 0.25rem;
       }
       #input:focus {
         outline: none;
       }
       #form > button {
-        background: #333;
+        background: #4e8357;
         border: none;
         padding: 0 1rem;
         margin: 0.25rem;
-        border-radius: 3px;
+        border-radius: 1px;
         outline: none;
         color: #fff;
       }
@@ -61,6 +60,27 @@
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="script.js"></script>
+    <script>
+      let socket = io();
+
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      const messages = document.getElementById("messages");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat message", function (msg) {
+        let item = document.createElement("li");
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+    </script>
   </body>
 </html>
